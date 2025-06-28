@@ -15,7 +15,7 @@ public class PlayerSpawner : SimulationBehaviour, IPlayerJoined
         {
              spawnedPlayer = Runner.Spawn(PlayerPrefab, new Vector3(0, 1, 0), Quaternion.identity, player);
          
-
+             Debug.Log("Player joined: " + player);
 
 
             //  obj.GetComponent<PlayerNameUI>().SetPlayerName(identity.playerRef.ToString()); // set the player name in the UI
