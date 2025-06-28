@@ -6,10 +6,11 @@ using UnityEditor.SceneManagement;
 [InitializeOnLoad]
 public static class ToolbarSceneSwitcher
 {
-    static string[] sceneNames = { "Main", "OnboardingUI"};
+    static string[] sceneNames = { "Main", "OnboardingUI","DemoScene"};
     static string[] scenePaths = {
         "Assets/Scenes/Main.unity",
         "Assets/Scenes/OnboardingUI.unity",
+        "Assets/Samples/XR Interaction Toolkit/3.0.8/Starter Assets/DemoScene.unity"
     };
 
     static int selectedSceneIndex = 0;
