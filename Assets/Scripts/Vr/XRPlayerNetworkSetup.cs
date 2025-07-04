@@ -17,21 +17,24 @@ public class XRNetworkPlayerSetup : NetworkBehaviour
     {
 
         bool isLocal = Object.HasInputAuthority;
-
-
         xrCamera.enabled = isLocal;
 
         SetTrackedPoseDriverEnabled(head, isLocal);
         SetTrackedPoseDriverEnabled(leftHand, isLocal);
         SetTrackedPoseDriverEnabled(rightHand, isLocal);
+
+        if (!isLocal)
+        {
+            DissableAllObjectsExceptRightVisual(rightHand);
+            DissableAllObjectsExceptLeftVisual(leftHand);
+        }
+
     }
 
     void SetTrackedPoseDriverEnabled(GameObject obj, bool enabled)
     {
 
-
-
-        Component[] components  = obj.GetComponents<Component>();
+        Component[] components = obj.GetComponents<Component>();
         foreach (Component comp in components)
         {
             if (comp is UnityEngine.InputSystem.XR.TrackedPoseDriver driver)
@@ -49,15 +52,41 @@ public class XRNetworkPlayerSetup : NetworkBehaviour
                 rayInteractor.enabled = enabled;
                 Debug.Log("HapticImpulsePlayer enabled: " + enabled);
             }
-             else if (comp is ControllerInputActionManager controllerInputActionManager)
+            else if (comp is ControllerInputActionManager controllerInputActionManager)
             {
                 controllerInputActionManager.enabled = enabled;
                 Debug.Log("ControllerInputActionManager enabled: " + enabled);
             }
-          
-          
+
+
         }
     }
+
+    
+    private void DissableAllObjectsExceptRightVisual(GameObject obj)
+    {
+        foreach (Transform child in obj.transform)
+        {
+            if (child.name != "Right Controller Visual")
+            {
+                child.gameObject.SetActive(false);
+            }
+
+        }
+    }
+
+    private void DissableAllObjectsExceptLeftVisual(GameObject obj)
+    {
+        foreach (Transform child in obj.transform)
+        {
+            if (child.name != "Left Controller Visual")
+            {
+                child.gameObject.SetActive(false);
+            }
+
+        }
+    }
+ 
 
     
 
