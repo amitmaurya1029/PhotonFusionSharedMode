@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -7,9 +8,11 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 public class BallControler : XRGrabInteractable
 {
 
+    private NetworkObject networkObject;
     void Start()
     {
-
+        networkObject = GetComponent<NetworkObject>();
+        
     }
 
 
@@ -24,12 +27,25 @@ public class BallControler : XRGrabInteractable
     protected override void Grab()
     {
         base.Grab();
-        Debug.Log("Ball Grabbed");
+        if (!networkObject.HasStateAuthority)
+        {
+           networkObject.RequestStateAuthority();
+           Debug.Log("Ball Grabbed");
+            return;
+        }
+        
     }
 
-    protected override void Drop()
-    {
-        base.Drop();
-        Debug.Log("Ball Dropped");
-    }
+    // protected override void Drop()
+    // {
+    //     base.Drop();
+    //     if (networkObject.HasStateAuthority)
+    //     {
+    //         networkObject.ReleaseStateAuthority();
+    //     }
+        
+
+
+    //     Debug.Log("Ball Dropped");
+    // }
 }

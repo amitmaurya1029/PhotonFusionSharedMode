@@ -1,6 +1,10 @@
+using System.Threading.Tasks;
 using Fusion;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 
 public class XRNetworkPlayerSetup : NetworkBehaviour
 {
@@ -11,13 +15,12 @@ public class XRNetworkPlayerSetup : NetworkBehaviour
 
     void Start()
     {
-        // Only the local player should control this rig
+
         bool isLocal = Object.HasInputAuthority;
 
-        // Enable input + camera only for local player
+
         xrCamera.enabled = isLocal;
 
-        // Disable TrackedPoseDrivers for remote players
         SetTrackedPoseDriverEnabled(head, isLocal);
         SetTrackedPoseDriverEnabled(leftHand, isLocal);
         SetTrackedPoseDriverEnabled(rightHand, isLocal);
@@ -25,12 +28,38 @@ public class XRNetworkPlayerSetup : NetworkBehaviour
 
     void SetTrackedPoseDriverEnabled(GameObject obj, bool enabled)
     {
-        var driver = obj.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>();
-        if (driver != null)
+
+
+
+        Component[] components  = obj.GetComponents<Component>();
+        foreach (Component comp in components)
         {
-            driver.enabled = enabled;
+            if (comp is UnityEngine.InputSystem.XR.TrackedPoseDriver driver)
+            {
+                driver.enabled = enabled;
+                Debug.Log("TrackedPoseDriver enabled: " + enabled);
+            }
+            else if (comp is XRInteractionGroup controller)
+            {
+                controller.enabled = enabled;
+                Debug.Log("XRController enabled: " + enabled);
+            }
+            else if (comp is HapticImpulsePlayer rayInteractor)
+            {
+                rayInteractor.enabled = enabled;
+                Debug.Log("HapticImpulsePlayer enabled: " + enabled);
+            }
+             else if (comp is ControllerInputActionManager controllerInputActionManager)
+            {
+                controllerInputActionManager.enabled = enabled;
+                Debug.Log("ControllerInputActionManager enabled: " + enabled);
+            }
+          
+          
         }
     }
+
+    
 
    
 }
